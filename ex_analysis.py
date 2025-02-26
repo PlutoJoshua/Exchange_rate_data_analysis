@@ -64,8 +64,5 @@ with tab2:
         st.dataframe(sort.describe())
         # price_diff가 1.2 이상인 데이터 필터링
         high_price_diff_df = fillter_df_0[fillter_df_0['price_diff'] >= 1.2]
-        st.plotly_chart(px.line(high_price_diff_df, x='createdAt', y='price_diff', title='Price Difference >= 1.2'))
-        # price_diff가 1.2 이상인 데이터 필터링
-        high_price_diff_df = fillter_df_0[fillter_df_0['price_diff'] >= 1.2]
-        st.plotly_chart(px.line(high_price_diff_df, x='createdAt', y='price_diff', title='Price Difference >= 1.2'))        
+        st.plotly_chart(px.line(high_price_diff_df, x='createdAt', y='price_diff', title='Price Difference >= 1.2')) 
         st.dataframe(sort)
