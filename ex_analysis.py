@@ -49,9 +49,24 @@ with tab2:
 
     elif currency == 'JPY':
         st.plotly_chart(time_slot(jpy))
-        st.dataframe(jpy)
         fillter_df = calculate_price_difference(jpy, hour)
-        st.dataframe(fillter_df)
         st.plotly_chart(plot_price_difference(fillter_df))      
         df_resampled = jpy.resample("1h", on='createdAt')['diff'].mean().dropna()
         st.plotly_chart(px.line(df_resampled, x=df_resampled.index, y=df_resampled.values))    
+
+            # 이상치 감지 함수 추가
+    def detect_outliers(df):
+        threshold = 1.5
+        q1 = df['diff'].quantile(0.25)
+        q3 = df['diff'].quantile(0.75)
+        iqr = q3 - q1
+        lower_bound = q1 - (threshold * iqr)
+        upper_bound = q3 + (threshold * iqr)
+        return df[(df['diff'] < lower_bound) | (df['diff'] > upper_bound)]
+
+    outliers_jpy = detect_outliers(jpy)
+
+    # 이상치 데이터프레임 출력
+    st.header("Detected Outliers")
+    st.subheader("JPY Outliers")
+    st.write(outliers_jpy)
