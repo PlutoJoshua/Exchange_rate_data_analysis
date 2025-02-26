@@ -58,3 +58,10 @@ def plot_price_difference(df):
                       showlegend=True)
     
     return fig
+
+def box_plot(df):
+    df = df.dropna()
+    df = df[df['price_diff'] !=0.0]
+    fig = px.box(df, y='price_diff', title='Box Plot of Price Differences')
+    fig.update_layout(yaxis_title='Price Difference')
+    return fig
