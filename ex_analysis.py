@@ -52,17 +52,17 @@ with tab2:
         st.dataframe(sort)
     elif currency == 'JPY':
         st.plotly_chart(time_slot(jpy))
-        fillter_df = calculate_price_difference(jpy, hour)
-        st.plotly_chart(plot_price_difference(fillter_df))      
+        filter_df = calculate_price_difference(jpy, hour)
+        st.plotly_chart(plot_price_difference(filter_df))      
         df_resampled = jpy.resample("1h", on='createdAt')['diff'].mean().dropna()
         st.plotly_chart(px.line(df_resampled, x=df_resampled.index, y=df_resampled.values))    
-        st.plotly_chart(box_plot(fillter_df))
+        st.plotly_chart(box_plot(filter_df))
         st.markdown("---")
-        fillter_df_0 = fillter_df.copy()
-        fillter_df_0 = fillter_df_0[fillter_df_0['price_diff'] !=0.0]
-        sort = fillter_df_0.sort_values(by='price_diff', ascending=False)
+        filter_df_0 = filter_df.copy()
+        filter_df_0 = filter_df_0[filter_df_0['price_diff'] !=0.0]
+        sort = filter_df_0.sort_values(by='price_diff', ascending=False)
         st.dataframe(sort.describe())
         # price_diff가 1.2 이상인 데이터 필터링
-        high_price_diff_df = fillter_df_0[fillter_df_0['price_diff'] >= 1.2]
+        high_price_diff_df = filter_df_0[filter_df_0['price_diff'] >= 1.2]
         st.plotly_chart(px.line(high_price_diff_df, x='createdAt', y='price_diff', title='Price Difference >= 1.2')) 
         st.dataframe(sort)
