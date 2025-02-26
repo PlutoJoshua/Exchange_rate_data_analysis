@@ -46,3 +46,27 @@ def sort_data(df, code):
     df = df[df['currencyCode'] == f'{code}']
     df = df[['currencyCode', 'basePrice', 'createdAt']]
     return df
+
+# 시간 별 비교 그래프
+def calculate_price_difference(df, hour):
+    # createdAt을 기준으로 정렬
+    df = df.sort_values(by='createdAt')
+    
+    # 가격 차이를 저장할 리스트
+    price_diffs = []
+    
+    for index, row in df.iterrows():
+        target_time = row['createdAt'] + pd.Timedelta(hours=hour)
+        # target_time 이후의 데이터 중 가장 가까운 가격 찾기
+        future_prices = df[df['createdAt'] > target_time]
+        
+        if not future_prices.empty:
+            closest_price = future_prices.iloc[0]['basePrice']
+            price_diff = abs(closest_price - row['basePrice'])
+        else:
+            price_diff = None  # 이후 가격이 없을 경우
+        
+        price_diffs.append(price_diff)
+    
+    df['price_diff'] = price_diffs
+    return df
