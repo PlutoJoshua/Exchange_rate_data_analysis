@@ -41,6 +41,7 @@ with tab2:
     if currency == 'USD':
         st.markdown("---")
         st.plotly_chart(time_slot(usd))
+        st.plotly_chart(px.box(usd, y='basePrice', title='Box Plot of basePrice'))
         fillter_df = calculate_price_difference(usd, hour)
         
         st.plotly_chart(plot_price_difference(fillter_df))
@@ -52,6 +53,7 @@ with tab2:
         st.dataframe(sort)
     elif currency == 'JPY':
         st.plotly_chart(time_slot(jpy))
+        st.plotly_chart(px.box(jpy, y='basePrice', title='Box Plot of basePrice'))
         filter_df = calculate_price_difference(jpy, hour)
         st.plotly_chart(plot_price_difference(filter_df))      
         df_resampled = jpy.resample("1h", on='createdAt')['diff'].mean().dropna()
