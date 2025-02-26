@@ -25,14 +25,15 @@ with tab1:
     if currency == 'USD':
         st.plotly_chart(plot_time_series_px(usd, 'USD'))
         st.markdown("---")
+        st.plotly_chart(px.box(usd, y='basePrice', title='Box Plot of basePrice'))
         st.plotly_chart(px.line(usd, x='createdAt', y='diff', title='USD'))
         st.markdown("---")        
         st.plotly_chart(plot_weekly_subplots(usd))
 
-
     elif currency == 'JPY':
         st.plotly_chart(plot_time_series_px(jpy, 'JPY'))
         st.markdown("---")
+        st.plotly_chart(px.box(jpy, y='basePrice', title='Box Plot of basePrice'))
         st.plotly_chart(px.line(jpy, x='createdAt', y='diff', title='JPY'))
         st.markdown("---")
         st.plotly_chart(plot_weekly_subplots(jpy))
@@ -42,9 +43,6 @@ with tab2:
         st.plotly_chart(time_slot(usd))
         filter_df = calculate_price_difference(usd, hour)
         st.plotly_chart(time_slot_price_diff(filter_df))
-        st.plotly_chart(px.box(usd, y='basePrice', title='Box Plot of basePrice'))
-
-        
         st.plotly_chart(plot_price_difference(filter_df))
         df_resampled = usd.resample("1h", on='createdAt')['diff'].mean().dropna()
         st.plotly_chart(px.line(df_resampled, x=df_resampled.index, y=df_resampled.values))
@@ -56,7 +54,7 @@ with tab2:
         st.plotly_chart(time_slot(jpy))
         filter_df = calculate_price_difference(jpy, hour)
         st.plotly_chart(time_slot_price_diff(filter_df))
-        st.plotly_chart(px.box(jpy, y='basePrice', title='Box Plot of basePrice'))
+
 
         st.plotly_chart(plot_price_difference(filter_df))      
         df_resampled = jpy.resample("1h", on='createdAt')['diff'].mean().dropna()
