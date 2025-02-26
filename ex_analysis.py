@@ -18,7 +18,7 @@ jpy.loc[:, 'diff'] = jpy['basePrice'].diff().abs()
 st.header("Ex analysis Dashboard")
 # 통화 선택 드롭다운 추가
 currency = st.sidebar.selectbox("Select Currency", ['USD', 'JPY'])
-
+hour = st.sidebar.number_input("input number", min_value=1, value=3)
 tab1, tab2 = st.tabs(['basic', 'diff'])
 
 with tab1:
@@ -28,10 +28,7 @@ with tab1:
         st.plotly_chart(px.line(usd, x='createdAt', y='diff', title='USD'))
         st.markdown("---")        
         st.plotly_chart(plot_weekly_subplots(usd))
-        st.markdown("---")
-        st.plotly_chart(time_slot(usd))
-        fillter_df = calculate_price_difference(usd, 2)
-        st.plotly_chart(plot_price_difference(fillter_df))
+
 
     elif currency == 'JPY':
         st.plotly_chart(plot_time_series_px(jpy, 'JPY'))
@@ -39,5 +36,15 @@ with tab1:
         st.plotly_chart(px.line(jpy, x='createdAt', y='diff', title='JPY'))
         st.markdown("---")
         st.plotly_chart(plot_weekly_subplots(jpy))
+
+with tab2:
+    if currency == 'USD':
         st.markdown("---")
+        st.plotly_chart(time_slot(usd))
+        fillter_df = calculate_price_difference(usd, hour)
+        st.plotly_chart(plot_price_difference(fillter_df))
+
+    elif currency == 'JPY':
         st.plotly_chart(time_slot(jpy))
+        fillter_df = calculate_price_difference(jpy, hour)
+        st.plotly_chart(plot_price_difference(fillter_df))          
