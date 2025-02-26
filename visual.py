@@ -30,3 +30,9 @@ def plot_weekly_subplots(df):
     fig.update_xaxes(title_text='Date')
     fig.update_yaxes(title_text='diff')
     return fig
+
+
+def time_slot(df):
+    time_slot_diff = df.groupby(df['createdAt'].dt.hour)['diff'].mean().reset_index()
+    fig = px.line(time_slot_diff, x='createdAt', y='diff', title='diff for hour')
+    return fig
