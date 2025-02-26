@@ -38,3 +38,8 @@ def load_data():
     final_df = pd.concat(parsed_data, ignore_index=True)
     
     return final_df
+
+def sort_data(df, code):
+    df = df[df['currencyCode'] == f'{code}']
+    df = df[['currencyCode', 'basePrice', 'createdAt']]
+    return df

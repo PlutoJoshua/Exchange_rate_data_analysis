@@ -1,7 +1,9 @@
 import pandas as pd
-from data import load_data
+from data import load_data, sort_data
 
 df = load_data()
-usd = df[df['currencyCode'] == 'USD']
-usd = usd[['currencyCode', 'basePrice', 'createdAt']]
-print(usd)
+usd = sort_data(df, 'USD')
+print(usd.describe())
+
+jpy = sort_data(df, 'JPY')
+print(jpy.describe())
