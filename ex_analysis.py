@@ -43,6 +43,8 @@ with tab2:
         st.plotly_chart(time_slot(usd))
         fillter_df = calculate_price_difference(usd, hour)
         st.plotly_chart(plot_price_difference(fillter_df))
+        df_resampled = usd.resample("1h", on='createdAt')['diff'].mean().dropna()
+        st.plotly_chart(px.line(df_resampled, x=df_resampled.index, y=df_resampled.values))
 
     elif currency == 'JPY':
         st.plotly_chart(time_slot(jpy))
