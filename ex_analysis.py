@@ -1,6 +1,6 @@
 import pandas as pd
-from data import load_data, sort_data
-from visual import plot_time_series_px, plot_weekly_subplots, time_slot
+from data import load_data, sort_data, calculate_price_difference
+from visual import plot_time_series_px, plot_weekly_subplots, time_slot, plot_price_difference
 import plotly.express as px
 import streamlit as st
 
@@ -30,6 +30,8 @@ with tab1:
         st.plotly_chart(plot_weekly_subplots(usd))
         st.markdown("---")
         st.plotly_chart(time_slot(usd))
+        fillter_df = calculate_price_difference(usd, 2)
+        st.plotly_chart(plot_price_difference(fillter_df))
 
     elif currency == 'JPY':
         st.plotly_chart(plot_time_series_px(jpy, 'JPY'))

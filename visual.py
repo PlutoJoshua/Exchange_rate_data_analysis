@@ -36,3 +36,15 @@ def time_slot(df):
     time_slot_diff = df.groupby(df['createdAt'].dt.hour)['diff'].mean().reset_index()
     fig = px.line(time_slot_diff, x='createdAt', y='diff', title='diff for hour')
     return fig
+
+# 시각화
+def plot_price_difference(df):
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(x=df['createdAt'], y=df['price_diff'], mode='lines', name='Price Difference'))
+    
+    fig.update_layout(title='Price Difference',
+                      xaxis_title='Date',
+                      yaxis_title='Price Difference',
+                      showlegend=True)
+    
+    return fig
