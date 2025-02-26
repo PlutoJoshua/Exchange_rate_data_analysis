@@ -7,6 +7,16 @@ def plot_time_series_px(df, currency_code):
     fig = px.line(df, x='createdAt', y='basePrice', title=f'{currency_code} Time series')  # Plotly를 사용한 시각화
     fig.update_layout(xaxis_title='Date', yaxis_title='Base Price')
 
+    # 변동성 계산
+    vol = df['basePrice'].std()
+    mean = df['basePrice'].mean()
+    # 변동성 범위 추가 (배열로 변환)
+    upper_volatility = [mean + vol] * len(df)
+    lower_volatility = [mean - vol] * len(df)
+
+    # 변동성 범위 추가
+    fig.add_scatter(x=df['createdAt'], y=upper_volatility, mode='lines', name='Upper Volatility', line=dict(dash='dash', color='red'))
+    fig.add_scatter(x=df['createdAt'], y=lower_volatility, mode='lines', name='Lower Volatility', line=dict(dash='dash', color='blue'))
     return fig
 
 def plot_weekly_subplots(df):
