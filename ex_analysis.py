@@ -37,3 +37,5 @@ with tab1:
         st.plotly_chart(px.line(jpy, x='createdAt', y='diff', title='JPY'))
         st.markdown("---")
         st.plotly_chart(plot_weekly_subplots(jpy))
+        st.markdown("---")
+        st.plotly_chart(time_slot(jpy))
