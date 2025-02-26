@@ -1,8 +1,10 @@
 import pandas as pd
 import json
 import matplotlib.pyplot as plt
+import streamlit as st
 
 # 데이터 로드 함수
+@st.cache_data
 def load_data():
     # 매매기준율 데이터 로드 및 전처리 코드
     df = pd.read_csv('../sql_data/mama.csv', sep='\t', dtype=str)
@@ -39,6 +41,7 @@ def load_data():
     
     return final_df
 
+@st.cache_data
 def sort_data(df, code):
     df = df[df['currencyCode'] == f'{code}']
     df = df[['currencyCode', 'basePrice', 'createdAt']]
