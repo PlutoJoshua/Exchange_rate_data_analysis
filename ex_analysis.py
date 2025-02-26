@@ -1,5 +1,7 @@
 import pandas as pd
 from data import load_data
 
-usd = load_data()
-usd.head()
+df = load_data()
+usd = df[df['currencyCode'] == 'USD']
+usd = usd[['currencyCode', 'basePrice', 'createdAt']]
+print(usd)
