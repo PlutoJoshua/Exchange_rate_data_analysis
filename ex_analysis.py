@@ -1,6 +1,6 @@
 import pandas as pd
 from data import load_data, sort_data, calculate_price_difference
-from visual import plot_time_series_px, plot_weekly_subplots, time_slot, plot_price_difference, box_plot
+from visual import plot_time_series_px, plot_weekly_subplots, time_slot, plot_price_difference, box_plot, time_slot_price_diff
 import plotly.express as px
 import streamlit as st
 
@@ -39,22 +39,25 @@ with tab1:
 
 with tab2:
     if currency == 'USD':
-        st.markdown("---")
         st.plotly_chart(time_slot(usd))
+        filter_df = calculate_price_difference(usd, hour)
+        st.plotly_chart(time_slot_price_diff(filter_df))
         st.plotly_chart(px.box(usd, y='basePrice', title='Box Plot of basePrice'))
-        fillter_df = calculate_price_difference(usd, hour)
+
         
-        st.plotly_chart(plot_price_difference(fillter_df))
+        st.plotly_chart(plot_price_difference(filter_df))
         df_resampled = usd.resample("1h", on='createdAt')['diff'].mean().dropna()
         st.plotly_chart(px.line(df_resampled, x=df_resampled.index, y=df_resampled.values))
-        st.plotly_chart(box_plot(fillter_df))
+        st.plotly_chart(box_plot(filter_df))
         st.markdown("---")
-        sort = fillter_df.sort_values(by='price_diff', ascending=False)
+        sort = filter_df.sort_values(by='price_diff', ascending=False)
         st.dataframe(sort)
     elif currency == 'JPY':
         st.plotly_chart(time_slot(jpy))
-        st.plotly_chart(px.box(jpy, y='basePrice', title='Box Plot of basePrice'))
         filter_df = calculate_price_difference(jpy, hour)
+        st.plotly_chart(time_slot_price_diff(filter_df))
+        st.plotly_chart(px.box(jpy, y='basePrice', title='Box Plot of basePrice'))
+
         st.plotly_chart(plot_price_difference(filter_df))      
         df_resampled = jpy.resample("1h", on='createdAt')['diff'].mean().dropna()
         st.plotly_chart(px.line(df_resampled, x=df_resampled.index, y=df_resampled.values))    

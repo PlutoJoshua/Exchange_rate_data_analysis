@@ -47,6 +47,10 @@ def time_slot(df):
     fig = px.line(time_slot_diff, x='createdAt', y='diff', title='diff for hour')
     return fig
 
+def time_slot_price_diff(df):
+    time_slot_diff = df.groupby(df['createdAt'].dt.hour)['price_diff'].mean().reset_index()
+    fig = px.line(time_slot_diff, x='createdAt', y='price_diff', title='price_diff for hour')
+    return fig
 # 시각화
 def plot_price_difference(df):
     fig = go.Figure()
