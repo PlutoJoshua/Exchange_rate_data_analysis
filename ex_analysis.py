@@ -41,6 +41,8 @@ with tab1:
 with tab2:
     if currency == 'USD':
         st.plotly_chart(time_slot(usd))
+
+        # 원하는 시간대로 데이터 필터링
         filter_df = calculate_price_difference(usd, hour)
         st.plotly_chart(time_slot_price_diff(filter_df))
         st.plotly_chart(plot_price_difference(filter_df))
@@ -56,6 +58,8 @@ with tab2:
         st.dataframe(sort)
     elif currency == 'JPY':
         st.plotly_chart(time_slot(jpy))
+        
+        # 원하는 시간대로 데이터 필터링
         filter_df = calculate_price_difference(jpy, hour)
         st.plotly_chart(time_slot_price_diff(filter_df))
         st.plotly_chart(plot_price_difference(filter_df))
