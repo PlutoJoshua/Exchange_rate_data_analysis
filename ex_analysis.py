@@ -46,6 +46,9 @@ with tab2:
         st.plotly_chart(plot_price_difference(filter_df))
         df_resampled = usd.resample("1h", on='createdAt')['diff'].mean().dropna()
         st.plotly_chart(px.line(df_resampled, x=df_resampled.index, y=df_resampled.values))
+        count_zero_diff = (filter_df['price_diff'] == 0.0).sum()  # price_diff가 0.0인 갯수
+        total_count = len(filter_df)  # 전체 갯수
+        st.markdown(f'Price difference == 0.0: {count_zero_diff} out of {total_count} / {(count_zero_diff / total_count).round(2) * 100} %')
         st.plotly_chart(box_plot(filter_df))
         st.markdown("---")
         sort = filter_df.sort_values(by='price_diff', ascending=False)
