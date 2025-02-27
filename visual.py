@@ -49,18 +49,38 @@ def time_slot(df):
 
 def time_slot_price_diff(df):
     time_slot_diff = df.groupby(df['createdAt'].dt.hour)['price_diff'].mean().reset_index()
-    fig = px.line(time_slot_diff, x='createdAt', y='price_diff', title='price_diff for hour')
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(x=time_slot_diff['createdAt'], 
+                             y=time_slot_diff['price_diff'], 
+                             mode='lines+markers+text', 
+                             name='Price Difference',
+                             text=[f'{value:.1f}' for value in time_slot_diff['price_diff']],  # 소수점 첫째 자리 표시
+                             textposition='top center'))  # 텍스트 위치
+    fig.update_layout(title='price_diff for hour')
     return fig
 # 시각화
 def plot_price_difference(df):
     fig = go.Figure()
+    
+    # 기본 라인 그래프
     fig.add_trace(go.Scatter(x=df['createdAt'], y=df['price_diff'], mode='lines', name='Price Difference'))
+    
+    # 상위 값 표시
+    top = df.nlargest(30, 'price_diff')
+    fig.add_trace(go.Scatter(
+        x=top['createdAt'],
+        y=top['price_diff'],
+        mode='markers+text',
+        name='Top Values',
+        text=[f'{value:.1f}' for value in top['price_diff']],
+        textposition='top center',
+        marker=dict(size=5, color='red')
+    ))
     
     fig.update_layout(title='Price Difference',
                       xaxis_title='Date',
                       yaxis_title='Price Difference',
                       showlegend=True)
-    
     return fig
 
 def box_plot(df):
@@ -68,4 +88,16 @@ def box_plot(df):
     df = df[df['price_diff'] !=0.0]
     fig = px.box(df, y='price_diff', title='Box Plot of Price Differences')
     fig.update_layout(yaxis_title='Price Difference')
+    return fig
+
+def plot_price_distribution_histogram(df):
+    # 상위 50개 값 선택
+    top = df.nlargest(100, 'price_diff')
+    
+    # 시간대별로 분포를 나타내는 히스토그램
+    fig = px.histogram(top, x=top['createdAt'].dt.hour, title='Price Difference Distribution by Hour')
+    fig.update_layout(xaxis_title='Hour of Day', yaxis_title='Count')
+    # Add text annotations for each bar
+    fig.update_traces(texttemplate='%{y}', textposition='outside')  # Display count on top of bars
+    fig.update_layout(xaxis_title='Hour of Day', yaxis_title='Count')
     return fig

@@ -1,6 +1,6 @@
 import pandas as pd
 from data import load_data, sort_data, calculate_price_difference
-from visual import plot_time_series_px, plot_weekly_subplots, time_slot, plot_price_difference, box_plot, time_slot_price_diff
+from visual import plot_time_series_px, plot_weekly_subplots, time_slot, plot_price_difference, box_plot, time_slot_price_diff, plot_price_distribution_histogram
 import plotly.express as px
 import streamlit as st
 
@@ -50,25 +50,22 @@ with tab2:
         total_count = len(filter_df)  # 전체 갯수
         st.markdown(f'Price difference == 0.0: {count_zero_diff} out of {total_count} / {(count_zero_diff / total_count).round(2) * 100} %')
         st.plotly_chart(box_plot(filter_df))
-        st.markdown("---")
         sort = filter_df.sort_values(by='price_diff', ascending=False)
+        st.markdown("---")
+        st.plotly_chart(plot_price_distribution_histogram(filter_df))
         st.dataframe(sort)
     elif currency == 'JPY':
         st.plotly_chart(time_slot(jpy))
         filter_df = calculate_price_difference(jpy, hour)
         st.plotly_chart(time_slot_price_diff(filter_df))
-
-
-        st.plotly_chart(plot_price_difference(filter_df))      
-        df_resampled = jpy.resample("1h", on='createdAt')['diff'].mean().dropna()
-        st.plotly_chart(px.line(df_resampled, x=df_resampled.index, y=df_resampled.values))    
+        st.plotly_chart(plot_price_difference(filter_df))
+        df_resampled = usd.resample("1h", on='createdAt')['diff'].mean().dropna()
+        st.plotly_chart(px.line(df_resampled, x=df_resampled.index, y=df_resampled.values))
+        count_zero_diff = (filter_df['price_diff'] == 0.0).sum()  # price_diff가 0.0인 갯수
+        total_count = len(filter_df)  # 전체 갯수
+        st.markdown(f'Price difference == 0.0: {count_zero_diff} out of {total_count} / {(count_zero_diff / total_count).round(2) * 100} %')
         st.plotly_chart(box_plot(filter_df))
+        sort = filter_df.sort_values(by='price_diff', ascending=False)
         st.markdown("---")
-        filter_df_0 = filter_df.copy()
-        filter_df_0 = filter_df_0[filter_df_0['price_diff'] !=0.0]
-        sort = filter_df_0.sort_values(by='price_diff', ascending=False)
-        st.dataframe(sort.describe())
-        # price_diff가 1.2 이상인 데이터 필터링
-        high_price_diff_df = filter_df_0[filter_df_0['price_diff'] >= 1.2]
-        st.plotly_chart(px.line(high_price_diff_df, x='createdAt', y='price_diff', title='Price Difference >= 1.2')) 
+        st.plotly_chart(plot_price_distribution_histogram(filter_df))
         st.dataframe(sort)
